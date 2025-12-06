@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/styles.css">
+    <title>Grow a Tree</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Coming+Soon&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <header>
+        <h1>Grow a Tree</h1>
+        <div class="options">
+            <div class="button" id="reset-btn">Reset</div>
+        </div>
+    </header>
+    <main>
+        <div class="background">
+            <img src="assests/background.png">
+        </div>
+        <div class="foreground">
+            <div class="image-holder">
+                <img id="tree-image" src="assests/seed.png" alt="Tree at stage 0" draggable="false"></img>
+            </div>
+            <audio id="harvey">
+                <source src="assests/parrot_crow.mp3" type="audio/mp3">
+            </audio>
+        </div>
+    </main>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="js/script.js"></script>
+
+</body>
+
+</html>
