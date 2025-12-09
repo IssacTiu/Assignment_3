@@ -19,9 +19,17 @@ var soulStages = [
     "assests/soul-pile3.png",
     "assests/soul-pile4.png"];
 
+var deadIndex = 0;
+var deadStages = [
+    "assests/tree_dead.png",
+    "assests/tree_dead1.png",
+    "assests/tree_dead2.png",
+    "assests/tree_dead3.png",
+    "assests/tree_dead4.png",
+    "assests/tree_dead5.png"];
+
 var extraIndex = 0;
 var extraStages = [
-    "assests/tree_dead.png",
     "assests/cage.png"];
 
 var waterCount = 0;
@@ -44,8 +52,20 @@ async function updateImage(array, index) {
 async function flashImage() {
     $("#tree-image").attr("src", "assests/eyes.png");
     $("html").css("filter", "sepia(.5) contrast(1.3) brightness(0.9)");
+    switch (randomInt(3)) {
+        case 0:
+            $("header h1").html("The Past is not dead");
+            break;
+        case 1:
+            $("header h1").html("It is not even past");
+            break;
+        case 2:
+            $("header h1").html("Grow or Die");
+            break;
+    }
     await sleep(150);
     $("html").css("filter", "none");
+    $("header h1").html("Grow a Tree");
 }
 
 function changeMaster(i) {
@@ -58,10 +78,12 @@ function changeMaster(i) {
             $("#tree-image").attr("src", "assests/fish.png");
             break;
         case 2:
-            extraIndex = randomInt(extraStages.length);
-            $("#tree-image").attr("src", extraStages[extraIndex]);
+            extraIndex = 0;
             if (extraIndex == 0) {
-                $("html").css("transition", "1s");
+                $("html").css("transition", ".5s");
+                $("#tree-image").attr("src", deadStages[0]);
+            } else {
+                $("#tree-image").attr("src", extraStages[0]);
             }
             break;
         case 3:
@@ -97,13 +119,19 @@ $("#tree-image").on("click", async function () {
                     treeIndex++;
                     updateImage(treeStages, treeIndex);
                 } else {
-                    treeIndex = 0;
-                    waterCount = 0;
-                    await flashImage();
-                    changeMaster(3);
+                    if (randomInt(10) == 0) {
+                        treeIndex++;
+                        updateImage(treeStages, treeIndex);
+                    } else {
+                        treeIndex = 0;
+                        waterCount = 0;
+                        await flashImage();
+                        changeMaster(randomInt(4));
+                    }
                 }
             }
             break;
+
         case 1:
             if (waterCount != 8) {
                 if (fishIndex < fishStages.length - 1) {
@@ -116,13 +144,14 @@ $("#tree-image").on("click", async function () {
                 fishIndex = 0;
                 waterCount = 0;
                 await flashImage();
-                changeMaster(0);
+                changeMaster(randomInt(4));
             }
             break;
         case 2:
             if (extraIndex == 0) {
                 if (waterCount != 6) {
-                    $("html").css("filter", "sepia(.5) brightness(1.1) contrast(1.1)");
+                    updateImage(deadStages, waterCount);
+                    $("html").css("filter", "sepia(.5) brightness(1.5) contrast(1.1)");
                     await sleep(500);
                     $("html").css("filter", "none");
                 } else {
@@ -130,7 +159,7 @@ $("#tree-image").on("click", async function () {
                     $("html").css("transition", "none");
                     $("html").css("filter", "none");
                     await flashImage();
-                    changeMaster(3);
+                    changeMaster(randomInt(4));
                 }
             } else {
                 if (waterCount != 6) {
@@ -139,7 +168,7 @@ $("#tree-image").on("click", async function () {
                 } else {
                     waterCount = 0;
                     await flashImage();
-                    changeMaster(0);
+                    changeMaster(randomInt(4));
                 }
             }
             break;
@@ -151,7 +180,7 @@ $("#tree-image").on("click", async function () {
                 } else {
                     $("#tree-image").css("animation", "shake 0.1s infinite");
                     filter += 0.1;
-                    $("html").css("filter", "grayscale(1) contrast(" + (1.2 + filter*2) + ") brightness(" + (0.8 - filter) + ")");
+                    $("html").css("filter", "grayscale(1) contrast(" + (1.2 + filter * 2) + ") brightness(" + (0.8 - filter) + ")");
                 }
             } else {
                 soulIndex = 0;
@@ -159,7 +188,7 @@ $("#tree-image").on("click", async function () {
                 $("#tree-image").css("animation", "none");
                 $("html").css("filter", "none");
                 await flashImage();
-                changeMaster(0);
+                changeMaster(randomInt(4));
             }
             break;
     }
