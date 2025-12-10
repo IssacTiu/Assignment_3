@@ -28,16 +28,28 @@ var deadStages = [
     "assests/tree_dead4.png",
     "assests/tree_dead5.png"];
 
+var flashImages = [
+    "assests/flash1.png",
+    "assests/flash2.png",
+    "assests/flash3.png",
+    "assests/flash4.png"];
+
 var extraIndex = 0;
 var extraStages = [
     "assests/cage.png"];
 
 var waterCount = 0;
-var rand;
+var rand = 0;
+var prevRand = 0;
 var filter;
 
 function randomInt(max) {
-    return Math.floor(Math.random() * max);
+    rand = Math.floor(Math.random() * max);
+    while (rand == prevRand) {
+        rand = Math.floor(Math.random() * max);
+    }
+    prevRand = rand;
+    return rand;
 }
 
 function sleep(ms) {
@@ -50,7 +62,7 @@ async function updateImage(array, index) {
 }
 
 async function flashImage() {
-    $("#tree-image").attr("src", "assests/eyes.png");
+    $("#tree-image").attr("src", flashImages[randomInt(flashImages.length-1)]);
     $("html").css("filter", "sepia(.5) contrast(1.3) brightness(0.9)");
     switch (randomInt(3)) {
         case 0:
@@ -78,6 +90,7 @@ function changeMaster(i) {
             $("#tree-image").attr("src", "assests/fish.png");
             break;
         case 2:
+            filter = 0;
             extraIndex = 0;
             if (extraIndex == 0) {
                 $("html").css("transition", ".5s");
@@ -122,6 +135,8 @@ $("#tree-image").on("click", async function () {
                     if (randomInt(10) == 0) {
                         treeIndex++;
                         updateImage(treeStages, treeIndex);
+                        $("html").css("filter", "sepia(1) contrast(1.1)");
+                        $(this).wrap("<a href='https://www.rustylake.com/'></a>");
                     } else {
                         treeIndex = 0;
                         waterCount = 0;
@@ -151,9 +166,10 @@ $("#tree-image").on("click", async function () {
             if (extraIndex == 0) {
                 if (waterCount != 6) {
                     updateImage(deadStages, waterCount);
+                    filter++;
                     $("html").css("filter", "sepia(.5) brightness(1.5) contrast(1.1)");
                     await sleep(500);
-                    $("html").css("filter", "none");
+                    $("html").css("filter", "sepia(" + (0 + filter * 0.1) + ") brightness(" + (1 + filter * 0.1) + ") contrast(" + (1 + filter * 0.02) + ")");
                 } else {
                     waterCount = 0;
                     $("html").css("transition", "none");
@@ -200,6 +216,8 @@ $("#reset-btn").on("click", function () {
     treeIndex = 0;
     waterCount = 0;
     master = 0;
+    $("html").css("filter", "none");
+    $(".image-holder a").attr("href", "#");
     $("#tree-image").attr("src", treeStages[treeIndex]);
     $("#tree-image").attr("alt", "Tree at stage " + treeIndex);
 });
